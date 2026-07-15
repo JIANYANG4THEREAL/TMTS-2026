@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9HK24LVDX"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Y9HK24LVDX');
+    </script>   
+
+    <script src="config.js"></script>
+    <link rel="stylesheet" href="theme.css">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI箱體定位 對籠車疊棧</title>
+    <style>	
+        html {
+            scroll-behavior: smooth;
+            background-color: #f0f0f0; 
+        }
+
+        body {
+            font-family: "微軟正黑體", sans-serif;
+            margin: 0 auto; 
+            padding: 0;
+            padding-bottom: 90px; 
+            max-width: 500px; 
+            background-color: var(--basic-light); 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            min-height: 100vh;
+            position: relative; 
+            color: var(--text-dark);
+        }
+
+        .bottom-action-bar {
+            position: fixed; 
+            bottom: 0;       
+            width: 100%;
+            max-width: 500px; 
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.1); 
+            z-index: 1000;
+            display: flex;
+            padding: 10px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
+            backdrop-filter: blur(5px); 
+            box-sizing: border-box; 
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1; 
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            padding: 14px 0;
+            border-radius: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:active { opacity: 0.7; }
+
+        .btn-back {
+            background-color: #f8f9fa;
+            color: #5C636A;
+            border: 2px solid #dee2e6;
+        }
+
+        .btn-contact {
+            background-color: var(--brand-yellow);
+            color: #000;
+            border: 2px solid #e6c800;
+        }
+
+        .page-header {
+            padding: 30px 15px 15px 15px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--basic-text-dark); 
+            letter-spacing: 1px;
+			font-weight: bolder;
+        }
+
+        .page-header p {
+            margin: 8px 0 0 0;
+            color: #555;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 22px 15px;
+            margin: 0 15px 20px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
+        }
+
+        .card-title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: var(--text-dark);
+            border-bottom: 3px solid var(--basic-light);
+            padding-bottom: 10px;
+            text-align: center; 
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: var(--basic-light); 
+            border-radius: 8px;
+        }
+
+        .intro-text p {
+            margin: 5px 0;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--basic-text-dark); 
+            letter-spacing: 1px;
+        }
+
+        .spec-highlights {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .spec-box {
+            flex: 1;
+            background-color: var(--basic-light);
+            border-radius: 8px;
+            padding: 15px 5px;
+            text-align: center;
+        }
+
+        .spec-box .label {
+            font-size: 19px;
+            color: #555;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .spec-box .value {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--basic-text-dark);
+            display: block;
+			white-space: nowrap;
+        }
+
+        .spec-preview-container {
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .spec-preview-container img {
+            border-radius: 4px;
+            opacity: 0.9;
+            filter: grayscale(20%); 
+        }
+
+        .download-btn {
+            display: block;
+            text-align: center;
+            background-color: #fff;
+            color: var(--basic-text-dark);
+            border: 2px solid var(--basic-dark);
+            padding: 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.2s;
+        }
+        
+        .download-btn:active {
+            background-color: var(--basic-light);
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            animation: fade 0.3s ease-in-out;
+        }
+
+        @keyframes fade {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--basic-dark);
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            user-select: none;
+        }
+
+        .next { right: 8px; }
+        .prev { left: 8px; }
+
+        .dot-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .dot {
+            height: 8px;
+            width: 8px;
+            margin: 0 4px;
+            background-color: #d3d3d3;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease, width 0.3s ease;
+        }
+        .active-dot {
+            background-color: var(--basic-dark);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .carousel-wrap {
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 12px;
+            padding: 0 15px 6px 15px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; 
+            cursor: grab;
+            user-select: none;
+        }
+
+        .carousel-track.dragging {
+            cursor: grabbing;
+            scroll-snap-type: none; 
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .carousel-nav {
+            display: flex; 
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .carousel-nav {
+                display: flex;
+            }
+        }
+
+        .carousel-wrap .prev,
+        .carousel-wrap .next {
+            top: 42%;
+        }
+
+        .carousel-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+            flex: 0 0 78%;
+            scroll-snap-align: center;
+        }
+
+        .carousel-dots {
+            text-align: center;
+            margin: 4px 0 22px 0;
+        }
+
+        /* 統一長寬比容器：不論來源圖片是橫幅或直幅，卡片高度都會一致 */
+        .carousel-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .carousel-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            display: block;
+        }
+
+        .carousel-badge {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            background-color: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            backdrop-filter: blur(2px);
+        }
+
+        .carousel-caption {
+            padding: 14px 16px 18px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-dark);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* 技術特點輪播：每張圖本身就是完整設計好的簡報圖（含標題/說明/頁碼），
+           所以改成一次只顯示一張（不露出下一張），圖片也不套用固定比例裁切，直接滿版顯示 */
+        #feature-carousel-wrap .carousel-card {
+            flex: 0 0 100%;
+        }
+
+        #feature-carousel-wrap .carousel-img-wrap {
+            aspect-ratio: unset;
+            background-color: transparent;
+        }
+
+        #feature-carousel-wrap .carousel-img-wrap img {
+            height: auto;
+            object-fit: unset;
+        }
+
+        /* ===== 規格框滾動浮現效果 ===== */
+        .spec-box {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transition-delay: var(--reveal-delay, 0s);
+        }
+
+        .spec-box.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 數字比外框晚一點點出現，並帶一點縮放彈跳感 */
+        .spec-box .value {
+            opacity: 0;
+            transform: translateY(10px) scale(0.85);
+            transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition-delay: 0s;
+        }
+
+        .spec-box.in-view .value {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition-delay: calc(var(--reveal-delay, 0s) + 0.25s);
+        }
+    
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1>AI箱體定位 對籠車疊棧</h1>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">系統介紹</h2>
+        
+        <div class="intro-text">
+            <p><span class="font-fanuc">M-710</span>系列全新機種</p>
+            <p>AI辨識智慧解棧</p>
+        </div>
+
+        <img src="img/R202/main.png" alt="系統構成拉線圖">
+    </div>
+
+        <div class="card">
+        <h2 class="card-title">技術特點</h2>
+
+        <div class="carousel-wrap" id="feature-carousel-wrap" data-carousel>
+            <div class="carousel-track">
+                <div class="carousel-card">
+                    <div class="carousel-img-wrap">
+                        <img src="img/R202/s1.png" alt="特色1">
+                    </div>
+                </div>
+
+                <div class="carousel-card">
+                    <div class="carousel-img-wrap">
+                        <img src="img/R202/s2.png" alt="特色2">
+                    </div>
+                </div>
+
+                <div class="carousel-card">
+                    <div class="carousel-img-wrap">
+                        <img src="img/R202/s3.png" alt="特色3">
+                    </div>
+                </div>
+
+                <div class="carousel-card">
+                    <div class="carousel-img-wrap">
+                        <img src="img/R202/s4.png" alt="特色4">
+                    </div>
+                </div>
+
+            </div>
+
+            <span class="prev carousel-nav">&#10094;</span>
+            <span class="next carousel-nav">&#10095;</span>
+
+            <div class="carousel-dots">
+                <span class="dot active-dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+<div class="card" id="dynamic-robot-card" data-robot-model="M-710/50-26D">
+        <h2 class="card-title"><span id="db-model-name">-</span></h2>
+        
+        <div class="spec-highlights">
+            <div class="spec-box">
+                <span class="label">荷重能力</span>
+                <span class="value" id="db-payload">-</span>
+            </div>
+            <div class="spec-box">
+                <span class="label">工作範圍</span>
+                <span class="value" id="db-reach">-</span>
+            </div>
+            <div class="spec-box">
+                <span class="label">重複精度</span>
+                <span class="value" id="db-repeat">-</span>
+            </div>
+        </div>
+	
+        <div class="spec-preview-container">
+            <img id="db-preview-img" src="" alt="規格表預覽">
+        </div>
+
+        <a id="db-pdf-btn" href="#" target="_blank" class="download-btn">
+            下載完整規格型錄 (PDF)
+        </a>
+    </div>
+
+    <div class="bottom-action-bar">
+        <a href="index.html" class="action-btn btn-back">〈 返回首頁</a>
+        <a href="#" target="_blank" class="action-btn btn-contact global-contact-link">立即洽詢</a>
+    </div>
+
+    <script>
+// 通用卡片輪播：與 A04.html 共用同一套邏輯
+        function initCarousel(wrap) {
+            const track = wrap.querySelector('.carousel-track');
+            const dotsContainer = wrap.querySelector('.carousel-dots');
+            if (!track || !dotsContainer) return;
+
+            const cards = track.querySelectorAll('.carousel-card');
+            const dots = dotsContainer.querySelectorAll('.dot');
+            const prevBtn = wrap.querySelector('.prev');
+            const nextBtn = wrap.querySelector('.next');
+            if (!cards.length) return;
+
+            function updateDots() {
+                const cardWidth = cards[0].offsetWidth + 12; // 12px = gap
+                let index = Math.round(track.scrollLeft / cardWidth);
+                index = Math.max(0, Math.min(index, dots.length - 1));
+
+                dots.forEach(dot => dot.classList.remove('active-dot'));
+                if (dots[index]) dots[index].classList.add('active-dot');
+            }
+
+            let ticking = false;
+            function requestDotUpdate() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    updateDots();
+                    ticking = false;
+                });
+            }
+            track.addEventListener('scroll', requestDotUpdate);
+
+            // 桌面版：左右箭頭按鈕，點一下捲動一張卡片的寬度
+            function scrollByOneCard(direction) {
+                const cardWidth = cards[0].offsetWidth + 12;
+                track.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+            }
+            if (prevBtn) prevBtn.addEventListener('click', () => scrollByOneCard(-1));
+            if (nextBtn) nextBtn.addEventListener('click', () => scrollByOneCard(1));
+
+            // 桌面版：滑鼠按住拖曳橫向捲動
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartScrollLeft = 0;
+
+            track.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                track.classList.add('dragging');
+                dragStartX = e.pageX;
+                dragStartScrollLeft = track.scrollLeft;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const walk = e.pageX - dragStartX;
+                track.scrollLeft = dragStartScrollLeft - walk;
+            });
+
+            function endDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('dragging');
+                updateDots();
+            }
+
+            window.addEventListener('mouseup', endDrag);
+            track.addEventListener('mouseleave', endDrag);
+        }
+
+        document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+    
+        // 規格框（荷重能力／工作範圍／重複精度）滾動浮現效果
+        const specBoxes = document.querySelectorAll('.spec-box');
+        specBoxes.forEach((box, index) => {
+            box.style.setProperty('--reveal-delay', (index * 0.15) + 's');
+        });
+
+        const specObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    specObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        specBoxes.forEach(box => specObserver.observe(box));
+    
+    </script>
+</body>
+</html>

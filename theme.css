@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'FANUC-Font';
+    src: url('fonts/Fanuc.ttf') format('truetype'); 
+}
+.font-fanuc {
+    font-family: 'FANUC-Font', sans-serif;
+    font-weight: normal;
+}
+
+:root {
+    /* 1. 全新推出 (實機紅) */
+    --new-dark: #B90B2E;
+    --new-light: #FDF0F3;
+    --new-text-dark: #630417;
+    
+    /* 2. CRX體驗 (湖水綠) */
+    --crx-exp-dark: #127A68; 
+    --crx-exp-light: #E7F3F1;
+    --crx-exp-text-dark: #074036;
+
+    /* 3. CRX應用 (實機綠) */
+    --crx-app-dark: #2A6017;
+    --crx-app-light: #EAF2E8;
+    --crx-app-text-dark: #123308;
+
+    /* 4. 基本應用 (實機黃) */
+    --basic-dark: #E3C100;
+    --basic-light: #FFFDF0;
+    --basic-text-dark: #594B00;
+
+    /* 5. 視覺應用 (科技藍) */
+    --vision-dark: #0077B6;
+    --vision-light: #E5F3FA;
+    --vision-text-dark: #003652; 
+
+    /* 6. IOT軟體 (數位紫) */
+    --iot-dark: #7209B7;
+    --iot-light: #F2E6F7;
+    --iot-text-dark: #330454;
+
+    /* 7. 附錄連結 (專業灰) */
+    --appendix-dark: #5C636A;
+    --appendix-light: #F1F3F5;
+    --appendix-text-dark: #212529;
+
+    --brand-yellow: #FFDE00;
+}
+
+/* ====== YouTube 影片自適應容器 ====== */
+.video-card {
+    display: none; /* 預設先隱藏，有影片資料才顯示 */
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 完美的 16:9 比例 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #000; /* 載入前的黑色底圖，提升質感 */
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
