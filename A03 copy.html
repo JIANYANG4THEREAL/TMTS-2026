@@ -205,6 +205,44 @@
             background-color: var(--iot-light);
         }
 
+        /* ====== 理念說明專區連結：圖片上的「進一步了解」按鈕 ====== */
+        .link-image-wrap {
+            position: relative;
+        }
+
+        .link-image-wrap img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .link-learn-more-btn {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 20px;
+            border: 2px solid #ffffff;
+            border-radius: 999px;
+            /* background-color: rgba(255, 255, 255, 0.15); */
+            backdrop-filter: blur(2px);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: opacity 0.2s;
+        }
+
+        .link-learn-more-btn:active {
+            opacity: 0.6;
+        }
+
+        /* 左右滑動元素 */
         .prev, .next {
             cursor: pointer;
             position: absolute;
@@ -445,9 +483,12 @@
 	
 	<div class="card">
         <h2 class="card-title">理念說明專區連結</h2>
-        <a href="https://www.fanuc.co.jp/en/sustainability/" target="_blank">
-            <img src="img/A03/link.png" alt="FANUC 永續理念" style="width: 100%; display: block; border-radius: 8px;">
-        </a>
+        <div class="link-image-wrap">
+            <!-- <a href="https://www.fanuc.co.jp/en/sustainability/" target="_blank"> -->
+                <img src="img/A03/link.png" alt="FANUC 永續理念">
+            <!-- </a> -->
+            <a href="https://www.fanuc.co.jp/en/sustainability/" target="_blank" class="link-learn-more-btn">了解更多</a>
+        </div>
     </div>
 
 
