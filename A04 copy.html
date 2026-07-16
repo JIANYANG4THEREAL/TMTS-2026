@@ -313,6 +313,14 @@
             overflow: hidden;
             flex: 0 0 78%;
             scroll-snap-align: center;
+            opacity: 0;
+            transform: translateY(28px) scale(0.98);
+            transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+        }
+
+        .feature-card.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .feature-dot-container {
@@ -363,7 +371,6 @@
             font-weight: bold;
             margin: 50px 15px 50px 15px;
             color: var(--new-text-dark);
-
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -405,17 +412,16 @@
     
 </head>
 <body>
-
     <div class="page-header">
         <h1>全新機器人控制器</h1>
 		<h1><span class="font-fanuc">R-50+A</span></h1>
     </div>
 
     <div class="card">
-        <!-- <h2 class="card-title">各式櫃體</h2> -->
+        <h2 class="card-title">各式櫃體</h2>
         
         <div class="intro-text">
-            <p><span class="font-fanuc">R-50+A</span>新機器人控制器</p>
+            <p><span class="font-fanuc">R-50+A</span> 全新機器人控制器</p>
             <p>更快、更強、更安全</p>
         </div>
 
@@ -603,6 +609,23 @@
 
             window.addEventListener('mouseup', endFeatureDrag);
             featureCarousel.addEventListener('mouseleave', endFeatureDrag);
+
+            // 機型介紹卡片：同時滾動浮現效果
+            const featureCarouselContainer = document.querySelector('.feature-carousel-wrap');
+            const featureCardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        featureCards.forEach(card => card.classList.add('revealed'));
+                        featureCardObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '0px 0px -30px 0px'
+            });
+            if (featureCarouselContainer) {
+                featureCardObserver.observe(featureCarouselContainer);
+            }
 
             //文字滾動浮現效果
             const revealElements = document.querySelectorAll('.feature-section-title');
