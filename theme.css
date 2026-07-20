@@ -49,7 +49,7 @@
 /* ====== YouTube 影片自適應容器 ====== */
 .video-card {
     display: none; /* 預設先隱藏，有影片資料才顯示 */
-}
+} 
 
 .video-container {
     position: relative;
