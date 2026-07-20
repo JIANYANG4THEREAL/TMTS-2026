@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9HK24LVDX"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y9HK24LVDX');
+    </script>
+    
+    <script src="config.js"></script>
+    <link rel="stylesheet" href="theme.css">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMTS 2026 x FANUC Robot</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+            background-color: #f0f0f0;
+        }
+
+        body {
+            font-family: "微軟正黑體", sans-serif;
+            margin: 0 auto; 
+            padding: 0;
+            padding-bottom: 110px;
+            max-width: 500px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sticky-nav {
+            position: fixed; 
+            bottom: 0;       
+            width: 100%;
+            max-width: 500px; 
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15); 
+            z-index: 1000;
+            padding: 8px 5px;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            backdrop-filter: blur(5px); 
+            box-sizing: border-box; 
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px; 
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+            padding: 12px 2px; 
+            min-height: 48px;  
+            text-align: center;
+            font-size: 18px; 
+            letter-spacing: 0.5px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+            border-radius: 6px; 
+            transition: opacity 0.2s;
+            box-sizing: border-box; 
+        }
+        
+        .nav-item:active {
+            opacity: 0.7; 
+        }
+
+        .btn-new { background-color: var(--new-light); border: 2px solid var(--new-dark); }
+        .btn-crx-exp { background-color: var(--crx-exp-light); border: 2px solid var(--crx-exp-dark); }
+        .btn-crx-app { background-color: var(--crx-app-light); border: 2px solid var(--crx-app-dark); }
+        .btn-basic { background-color: var(--basic-light); border: 2px solid var(--basic-dark); }
+        .btn-vision { background-color: var(--vision-light); border: 2px solid var(--vision-dark); }
+        .btn-iot { background-color: var(--iot-light); border: 2px solid var(--iot-dark); }
+        .btn-appendix { background-color: var(--appendix-light); border: 2px solid var(--appendix-dark); }
+
+        .social-btn {
+            background: linear-gradient(135deg, #f09433 0%, #dc2743 20%, #1877F2 100%);
+            color: white !important; 
+            border: none;
+        }
+
+        h1 {
+            margin-top: 30px;
+			margin-bottom: 40px;
+            text-align: center;
+            line-height: 0.3;
+            font-size: 36px;
+            position: relative; 		
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        h3 {
+            text-align: right;
+            line-height: 1.8;
+            font-size: 24px;
+            margin-top: -30px;
+            margin-right: 15px;
+        }
+
+		h1::after {
+            content: ""; 
+            position: absolute;
+            bottom: -30px;       /* 和文字拉開一點呼吸空間 */
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 200px;         /* 👈 縮短成精緻的短線 */
+            height: 6px;         /* 👈 變成實心線 */
+            border-radius: 10px; /* 👈 加上圓角收邊，質感倍增 */
+            z-index: 1; 
+            display: block; 
+            /* opacity: 0.3; 這行直接刪掉，讓主題深色100%顯現 */
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* padding-top: 10px; */
+            gap: 20px;
+            flex-wrap: wrap; /* 螢幕過窄時允許換行，避免擠壓 */
+            /* background-color: rgb(255, 215, 2); */
+            /* border-bottom: 1px solid #d6d6d6; */
+        }
+
+         .automation,
+        .fanuc_logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .automation img {
+            width: 150px;
+            max-width: 40vw; /* 小螢幕自動縮小，兩張並排也不會爆版 */
+            height: auto;
+        }
+
+        .fanuc_logo img {
+            width: 130px;
+            max-width: 40vw; /* 小螢幕自動縮小，兩張並排也不會爆版 */
+            height: auto;
+        }
+
+        .main-image {
+            text-align: center;
+            padding: 5px 0px 5px 10px;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px auto; 
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .block-container {
+            margin: 0 10px 10px 10px;
+            padding: 15px 10px;
+            border-radius: 8px; 
+            scroll-margin-top: 20px; 
+        }
+		  
+		.dynamic-thumb {
+            width: 100%;
+            height: auto;
+            display: inline-block;
+            margin: 0 auto 15px auto;
+            box-sizing: border-box;
+            
+            /* 拿掉 border 跟 border-radius，把形狀主導權還給你的圖片 */
+            background-color: transparent; 
+            
+            /* 黑魔法：用 drop-shadow 畫出 2px 的實心外框 */
+            filter:
+                drop-shadow(2px 0px 0px var(--thumb-color, #ccc))
+                drop-shadow(-2px 0px 0px var(--thumb-color, #ccc))
+                drop-shadow(0px 2px 0px var(--thumb-color, #ccc))
+                drop-shadow(0px -2px 0px var(--thumb-color, #ccc))
+				drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.2));
+        }
+
+        .block-new { background-color: var(--new-light); }
+        .h1-new::after { background-color: var(--new-dark); }
+        
+        .block-crx-exp { background-color: var(--crx-exp-light); }
+        .h1-crx-exp::after { background-color: var(--crx-exp-dark); }
+
+        .block-crx-app { background-color: var(--crx-app-light); }
+        .h1-crx-app::after { background-color: var(--crx-app-dark); }
+
+        .block-basic { background-color: var(--basic-light); }
+        .h1-basic::after { background-color: var(--basic-dark); }
+
+        .block-vision { background-color: var(--vision-light); }
+        .h1-vision::after { background-color: var(--vision-dark); }
+
+        .block-iot { background-color: var(--iot-light); }
+        .h1-iot::after { background-color: var(--iot-dark); }
+
+        .block-appendix { background-color: var(--appendix-light); }
+        .h1-appendix::after { background-color: var(--appendix-dark); }
+
+
+        /* ====== 滿版 FANUC Logo 進場動畫 ====== */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background-color: rgb(255, 215, 2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #splash.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #splash img {
+            width: 80%;
+            /* max-width: 320px; */
+            opacity: 0;
+            transform: scale(0.85);
+            animation: splash-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.1s;
+        }
+
+        @keyframes splash-in {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes splash-line {
+            to { width: 120px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #splash img { animation: none; opacity: 1; transform: scale(1); }
+            #splash .splash-line { animation: none; width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="splash">
+        <img src="img/logo/fanuc_tw_logo.png" alt="FANUC">
+    </div>
+
+
+    <nav class="sticky-nav">
+        <div class="nav-grid">
+            <a href="#sec-new" class="nav-item btn-new">全新推出</a>
+            <a href="#sec-crx-exp" class="nav-item btn-crx-exp">CRX體驗</a>
+            <a href="#sec-crx-app" class="nav-item btn-crx-app">CRX應用</a>
+            <a href="#sec-basic" class="nav-item btn-basic">視覺應用</a>
+            
+            <a href="#sec-vision" class="nav-item btn-vision">AI 應用</a>
+            <a href="#sec-iot" class="nav-item btn-iot">IOT 軟體</a>
+            <a href="#sec-appendix" class="nav-item btn-appendix">附錄連結</a>
+            <a href="https://linktr.ee/FANUC.Taiwan?utm_source=linktree_profile_share&ltsid=1cd34134-abf9-49a7-bf80-78fdd76adf19"  target="_blank" class="nav-item social-btn">追蹤社群</a>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="automation">
+            <img src="img/index/tpe_automation.png" alt="automation logo">
+        </div>
+        <p style="font-size: 30px;">|</p>
+        <div class="fanuc_logo">
+            <img src="img/logo/fanuc_logo.png" alt="fanuc logo">
+        </div>
+    </div>
+
+    <!-- <h3 class="bold-heading">臺中國際會展中心一樓 F0202</h3> -->
+	
+    <div id="sec-new" class="block-container block-new">
+	    <h1 class="h1-new">全新推出</h1>
+	    <div class="main-image">
+			<a href="A04.html"><img src="img/A04/index.png" alt="A04" class="dynamic-thumb"></a>
+			<a href="R219.html"><img src="img/R219/index.png" alt="R219" class="dynamic-thumb"></a>
+			<a href="A01.html"><img src="img/A01/index.png" alt="A01" class="dynamic-thumb"></a>
+	    </div>	
+	</div>
+		
+    <div id="sec-crx-exp" class="block-container block-crx-exp">
+        <h1 class="h1-crx-exp"><span class="font-fanuc">CRX</span>體驗區</h1>
+        <div class="main-image">
+			<a href="R204.html"><img src="img/R204/index.png" alt="R204" class="dynamic-thumb"></a>
+			<a href="R205.html"><img src="img/R205/index.png" alt="R205" class="dynamic-thumb"></a>
+	   </div>
+	</div>
+
+    <div id="sec-crx-app" class="block-container block-crx-app">
+        <h1 class="h1-crx-app"><span class="font-fanuc">CRX</span>應用</h1>	
+        <div class="main-image">
+			<a href="R210.html"><img src="img/R210/index.png" alt="R210" class="dynamic-thumb"></a>
+			<a href="R215.html"><img src="img/R215/index.png" alt="R215" class="dynamic-thumb"></a>
+        </div>
+	</div>
+		
+    <div id="sec-basic" class="block-container block-basic">
+        <h1 class="h1-basic">視覺應用</h1>
+        <div class="main-image">
+			<a href="R202.html"><img src="img/R202/index.png" alt="R202" class="dynamic-thumb"></a>
+			<a href="R223.html"><img src="img/R223/index.png" alt="R223" class="dynamic-thumb"></a>
+        </div>
+	</div>
+	
+    <div id="sec-vision" class="block-container block-vision">
+        <h1 class="h1-vision">AI 應用</h1>
+        <div class="main-image">
+			<a href="R226.html"><img src="img/R226/index.png" alt="R226" class="dynamic-thumb"></a>
+        </div>
+	</div>
+	
+    <div id="sec-iot" class="block-container block-iot">
+        <h1 class="h1-iot">IOT軟體</h1>
+        <div class="main-image">
+			<a href="A02.html"><img src="img/A02/index.png" alt="A02" class="dynamic-thumb"></a>
+			<a href="A03.html"><img src="img/A03/index.png" alt="A03" class="dynamic-thumb"></a>
+        </div>
+	</div> 	
+	
+    <div id="sec-appendix" class="block-container block-appendix">
+        <h1 class="h1-appendix">附錄連結</h1>
+        <div class="main-image">
+            <a href="#" class="global-contact-link" target="_blank"><img src="img/index/S01.png" alt="S01" class="dynamic-thumb"></a>
+            <a href="https://www.fanuc.co.jp/en/product/catalog/pdf/robot/Robot_General(C)-04.pdf" target="_blank"><img src="img/index/S02.png" alt="S02" class="dynamic-thumb"></a>
+            <a href="https://www.fanuc.co.jp/en/product/catalog/pdf/robot/VisionForce(C)-02.pdf" target="_blank"><img src="img/index/S03.png" alt="S03" class="dynamic-thumb"></a>
+        </div>
+	</div>
+
+    <script>
+        (function () {
+            var splash = document.getElementById('splash');
+            var STORAGE_KEY = 'fanucSplashShown';
+
+            // 判斷這次載入的類型:reload(重新整理) / navigate / back_forward 等
+            var navType = 'navigate';
+            var navEntries = performance.getEntriesByType && performance.getEntriesByType('navigation');
+            if (navEntries && navEntries.length) {
+                navType = navEntries[0].type;
+            } else if (performance.navigation) {
+                // 舊版瀏覽器 fallback
+                navType = performance.navigation.type === 1 ? 'reload' : 'navigate';
+            }
+
+            var isReload = navType === 'reload';
+
+            // 已經看過動畫了,且這次不是使用者主動重新整理 -> 直接跳過
+            if (!isReload && sessionStorage.getItem(STORAGE_KEY)) {
+                splash.remove();
+                return;
+            }
+
+            var MIN_DISPLAY_TIME = 1500; // 動畫最短顯示時間(毫秒)
+            var start = performance.now();
+
+            function hideSplash() {
+                sessionStorage.setItem(STORAGE_KEY, '1');
+                var elapsed = performance.now() - start;
+                var wait = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+                setTimeout(function () {
+                    splash.classList.add('hide');
+                    splash.addEventListener('transitionend', function () {
+                        splash.remove();
+                    }, { once: true });
+                }, wait);
+            }
+
+            if (document.readyState === 'complete') {
+                hideSplash();
+            } else {
+                window.addEventListener('load', hideSplash);
+            }
+        })();
+    </script>
+
+</body>
+</html>
