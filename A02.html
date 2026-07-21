@@ -409,7 +409,7 @@
             <p>機器人維護與診斷系統</p>
         </div>
 
-        <img id="main-hero-img" src="img/A02/main.webp" alt="系統構成拉線圖" fetchpriority="high">
+        <img src="img/A02/main.webp" alt="系統構成拉線圖" fetchpriority="high">
     </div>
 	
 	<!-- <div class="card">
@@ -588,49 +588,18 @@
         specBoxes.forEach(box => specObserver.observe(box));
 
         // 技術特點輪播卡片：滾動浮現效果（同 A04 機型介紹卡片，卡片同時一起出現）
-        // 需同時滿足「捲動進入可視範圍」與「main-hero-img 圖片載入完成」，
-        // 兩個條件中較晚發生的那個才會觸發卡片浮現，避免圖片還沒跑完卡片就先出現。
         const featureCarouselWrap = document.getElementById('feature-carousel-wrap');
-        const mainHeroImg = document.getElementById('main-hero-img');
-
-        let mainHeroImgLoaded = !mainHeroImg; // 找不到圖片時視為已完成，避免卡死
-        let featureInView = false;
-
         if (featureCarouselWrap) {
             const featureCards = featureCarouselWrap.querySelectorAll('.carousel-card');
-
-            function revealFeatureCardsIfReady() {
-                if (mainHeroImgLoaded && featureInView) {
-                    featureCards.forEach(card => card.classList.add('revealed'));
-                }
-            }
-
-            if (mainHeroImg) {
-                if (mainHeroImg.complete && mainHeroImg.naturalWidth > 0) {
-                    mainHeroImgLoaded = true;
-                } else {
-                    mainHeroImg.addEventListener('load', () => {
-                        mainHeroImgLoaded = true;
-                        revealFeatureCardsIfReady();
-                    });
-                    // 圖片載入失敗時也放行，避免卡片永遠無法浮現
-                    mainHeroImg.addEventListener('error', () => {
-                        mainHeroImgLoaded = true;
-                        revealFeatureCardsIfReady();
-                    });
-                }
-            }
-
             const featureCardObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        featureInView = true;
-                        revealFeatureCardsIfReady();
+                        featureCards.forEach(card => card.classList.add('revealed'));
                         featureCardObserver.unobserve(entry.target);
                     }
                 });
             }, {
-                threshold: 0.2,
+                threshold: 0.5,
                 rootMargin: '0px 0px -30px 0px'
             });
             featureCardObserver.observe(featureCarouselWrap);
