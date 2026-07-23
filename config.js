@@ -121,49 +121,47 @@ document.addEventListener("DOMContentLoaded", function() {
 				const ytId = ytWrapper.getAttribute('data-yt-id');
 				
 				if (ytId) {
-					// 如果有填 ID，就把卡片顯示出來
-					videoCard.style.display = 'block';
-					// 明確帶上目前網站的網域當作 origin 參數，並強制指定 referrerpolicy，
-					// 避免因主機端 Referrer-Policy 設定過嚴（例如 same-origin）
-					// 導致 YouTube 收不到 Referer/Origin，改顯示「請至 YouTube 上觀看」
-					// 的覆蓋畫面，一點擊就整個跳轉離開網站。
-					const embedOrigin = window.location.origin;
+                    // ★ 防呆：YouTube 影片 ID 固定為 11 碼，只能是英數字、底線、連字號
+                    const isValidYtId = /^[a-zA-Z0-9_-]{11}$/.test(ytId);
 
-					// autoplay=1 + mute=1：瀏覽器只允許「靜音」的影片自動播放，
-					// 所以一定要一起帶 mute=1，否則自動播放會被瀏覽器擋下來。
-					// playsinline=1：讓 iOS Safari 用小畫面直接播放，不會被強制全螢幕播放。
-					const buildYoutubeIframe = () => `
-						<iframe 
-							src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&origin=${embedOrigin}&autoplay=1&mute=1&playsinline=1" 
-							title="YouTube video player" 
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-							referrerpolicy="strict-origin-when-cross-origin"
-							allowfullscreen>
-						</iframe>
-					`;
+                    if (!isValidYtId) {
+                        console.error(`🔴 [YouTube ID 格式異常] data-yt-id="${ytId}" 不是合法的 11 碼影片 ID，請檢查 HTML 設定！`);
+                        videoCard.style.display = 'none'; // 格式不對就直接隱藏，避免產生壞掉的 iframe
+                    } else {
+                        // 如果有填 ID 且格式正確，就把卡片顯示出來
+                        videoCard.style.display = 'block';
 
-					// ★ 捲動到「展示影片」區塊才載入影片並自動播放，
-					// 而不是網頁一開就播放。使用 IntersectionObserver 偵測可視範圍。
-					if ('IntersectionObserver' in window) {
-						const videoObserver = new IntersectionObserver((entries, obs) => {
-							entries.forEach(entryItem => {
-								// 卡片至少露出 20% 才視為「捲到這個區塊」
-								if (entryItem.isIntersecting) {
-									ytWrapper.innerHTML = buildYoutubeIframe();
-									obs.disconnect(); // 只需要觸發一次，之後不用再監聽
-								}
-							});
-						}, { threshold: 0.2 });
+                        const embedOrigin = window.location.origin;
 
-						videoObserver.observe(videoCard);
-					} else {
-						// 舊瀏覽器不支援 IntersectionObserver，就直接載入
-						ytWrapper.innerHTML = buildYoutubeIframe();
-					}
-				} else {
-					// 如果該網頁沒有填寫影片 ID (或是空白)，就確保卡片隱藏
-					videoCard.style.display = 'none';
-				}
+                        const buildYoutubeIframe = () => `
+                            <iframe 
+                                src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&origin=${embedOrigin}&autoplay=1&mute=1&playsinline=1" 
+                                title="YouTube video player" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen>
+                            </iframe>
+                        `;
+
+                        if ('IntersectionObserver' in window) {
+                            const videoObserver = new IntersectionObserver((entries, obs) => {
+                                entries.forEach(entryItem => {
+                                    if (entryItem.isIntersecting) {
+                                        ytWrapper.innerHTML = buildYoutubeIframe();
+                                        obs.disconnect();
+                                    }
+                                });
+                            }, { threshold: 0.2 });
+
+                            videoObserver.observe(videoCard);
+                        } else {
+                            ytWrapper.innerHTML = buildYoutubeIframe();
+                        }
+                    }
+                } else {
+                    // 如果該網頁沒有填寫影片 ID (或是空白)，就確保卡片隱藏
+                    videoCard.style.display = 'none';
+                }
 			}
         } else {
             console.error("找不到機型資料：", targetModel, "請檢查 config.js 裡面的 ROBOT_DB 是否有建立此機型！");
