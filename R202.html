@@ -6,11 +6,11 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9HK24LVDX"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-Y9HK24LVDX');
-    </script>   
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Y9HK24LVDX');
+    </script>
 
     <script src="config.js"></script>
     <link rel="stylesheet" href="theme.css">
@@ -118,7 +118,7 @@
             color: var(--text-dark);
             border-bottom: 3px solid var(--basic-light);
             padding-bottom: 10px;
-            text-align: center; 
+            text-align: center;
         }
 
         .card img {
@@ -415,7 +415,6 @@
     </style>
 </head>
 <body>
-
     <div class="page-header">
         <h1>AI箱體定位 對籠車疊棧</h1>
     </div>
@@ -474,6 +473,12 @@
         </div>
         <!-- </div> -->
 
+        <div class="card video-card" id="dynamic-video-card">
+				<h2 class="card-title">展示影片</h2>
+				<div class="video-container" id="db-youtube-wrapper" data-yt-id="SIE3hLJGiDg">
+					</div>
+		</div>	
+
         <div class="card" id="dynamic-robot-card" data-robot-model="M-710/50-26D">
         <h2 class="card-title"><span id="db-model-name">-</span></h2>
         
@@ -507,7 +512,7 @@
     </div>
 
     <script>
-// 通用卡片輪播：與 A04.html 共用同一套邏輯
+        // 通用卡片輪播：與 A04.html 共用同一套邏輯
         function initCarousel(wrap) {
             const track = wrap.querySelector('.carousel-track');
             const dotsContainer = wrap.querySelector('.carousel-dots');
@@ -616,7 +621,7 @@
             });
             featureCardObserver.observe(featureCarouselWrap);
         }
-    
+        
     </script>
 </body>
 </html>
